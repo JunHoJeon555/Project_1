@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody rigid;
 
-    Vector2 inputDir;
     PlayerInputActions inputActions;
 
     private void Awake()
@@ -38,7 +37,7 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Disable();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         //transform.Translate(Time.deltaTime * moveSpeed * moveDir * transform.forward, Space.World);
         rigid.MovePosition(rigid.position*Time.fixedDeltaTime*moveDir*moveSpeed);
@@ -59,18 +58,8 @@ public class PlayerController : MonoBehaviour
     }
     void Rotate()
     {
-        Quaternion rotate = Quaternion.AngleAxis(Time.deltaTime * turnSpeed * rotateDir, transform.up);
-
-        //이걸 실행하면 회전을 되나 그 방향으로 안감
-        //Vector3 euler1 = rotate.eulerAngles;
-        //transform.Rotate(euler1, Space.World);
-
-        //리지드바디 사용하는것
+        Quaternion rotate = Quaternion.AngleAxis(Time.fixedDeltaTime * turnSpeed * rotateDir, transform.up);
         rigid.MoveRotation(rigid.rotation * rotate);
     }
-
-
-
-
 
 }
