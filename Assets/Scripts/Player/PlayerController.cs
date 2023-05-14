@@ -50,14 +50,15 @@ public class PlayerController : MonoBehaviour
     private void OnMove(InputAction.CallbackContext context)
     {
         Vector2 input = context.ReadValue<Vector2>();
-        SetInput(input);
-        animator.SetBool("Move", true);
+        SetInput(input, !context.canceled);
+        
     }
 
-    private void SetInput(Vector2 input)
+    private void SetInput(Vector2 input , bool move)
     {
         rotateDir = input.x;
         moveDir = input.y;
+        animator.SetBool("Move", move);
     }
     void Rotate()
     {
