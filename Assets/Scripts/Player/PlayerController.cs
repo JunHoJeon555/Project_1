@@ -15,10 +15,13 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody rigid;
 
+    Animator animator;
+
     PlayerInputActions inputActions;
 
     private void Awake()
     {
+        animator = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         inputActions = new PlayerInputActions();
     }
@@ -39,8 +42,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //transform.Translate(Time.deltaTime * moveSpeed * moveDir * transform.forward, Space.World);
-        rigid.MovePosition(rigid.position*Time.fixedDeltaTime*moveDir*moveSpeed);
+        rigid.MovePosition(rigid.position + Time.fixedDeltaTime * moveSpeed * moveDir * transform.forward);
         Rotate();
     }
 
@@ -49,6 +51,7 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 input = context.ReadValue<Vector2>();
         SetInput(input);
+        animator.SetBool("Move", true);
     }
 
     private void SetInput(Vector2 input)
