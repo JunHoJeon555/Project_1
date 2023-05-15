@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -642,6 +642,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4375781319647684632, guid: d19d6cb3ee5fefd43bb285c4740486c0, type: 3}
+      propertyPath: maxStamina
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4375781319647684708, guid: d19d6cb3ee5fefd43bb285c4740486c0, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -805,3 +809,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   turnSpeed: 180
+  maxStamina: 100

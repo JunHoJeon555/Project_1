@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +12,10 @@ public class PlayerController : MonoBehaviour
     float rotateDir = 0f;
     float moveDir = 0f;
 
+    public float maxStamina = 10;
+    float currenStamina;
+
+    bool IsRun = false;
     Rigidbody rigid;
 
     Animator animator;
@@ -21,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        currenStamina = maxStamina;
         animator = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         inputActions = new PlayerInputActions();
@@ -31,10 +35,19 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Enable();
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnMove;
+        inputActions.Player.Attack.performed += OnAttack;
+        inputActions.Player.Run.performed += OnRun;
+        inputActions.Player.Run.canceled += OnRun_Cancel;
+        //inputActions.Player.Run.
     }
+
+ 
 
     private void OnDisable()
     {
+        inputActions.Player.Run.canceled -= OnRun_Cancel;
+        inputActions.Player.Run.performed -= OnRun;
+        inputActions.Player.Attack.performed-= OnAttack;
         inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Move.performed -= OnMove;
         inputActions.Player.Disable();
@@ -46,6 +59,36 @@ public class PlayerController : MonoBehaviour
         Rotate();
     }
 
+    private void Update()
+    {
+        if (IsRun)
+        {
+            currenStamina -= Time.deltaTime;
+            Debug.Log($"현재 남은 스테미나 {currenStamina}");
+            if(currenStamina <= 0)
+            {
+                animator.SetBool("Run", false);
+                Debug.LogError("스테미나 없음");
+            }
+        }
+        
+    }
+    private void OnAttack(InputAction.CallbackContext obj)
+    {
+        animator.SetTrigger("Attack");
+    }
+
+    private void OnRun(InputAction.CallbackContext context)
+    {
+        IsRun= true;
+        animator.SetBool("Run", IsRun);
+     
+    }
+    private void OnRun_Cancel(InputAction.CallbackContext context)
+    {
+        IsRun = false;
+        animator.SetBool("Run", IsRun);
+    }
 
     private void OnMove(InputAction.CallbackContext context)
     {
