@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,7 +11,10 @@ public class PlayerController : MonoBehaviour
     public float turnSpeed = 180.0f;
 
     float rotateDir = 0f;
-    float moveDir = 0f;
+    float moveDir_y = 0f;
+    float moveDir_x = 0f;
+
+    private Vector2 mousePosition;
 
     public float maxStamina = 10;
     float currenStamina;
@@ -38,13 +42,14 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Attack.performed += OnAttack;
         inputActions.Player.Run.performed += OnRun;
         inputActions.Player.Run.canceled += OnRun_Cancel;
-        //inputActions.Player.Run.
+        inputActions.Player.LeftRight.performed += OnMouseMove;
     }
 
- 
+    
 
     private void OnDisable()
     {
+        inputActions.Player.LeftRight.performed-= OnMouseMove;
         inputActions.Player.Run.canceled -= OnRun_Cancel;
         inputActions.Player.Run.performed -= OnRun;
         inputActions.Player.Attack.performed-= OnAttack;
@@ -55,7 +60,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rigid.MovePosition(rigid.position + Time.fixedDeltaTime * moveSpeed * moveDir * transform.forward);
+        rigid.MovePosition(rigid.position + Time.fixedDeltaTime * moveSpeed * moveDir_y * transform.forward);
+        rigid.MovePosition(rigid.position + Time.fixedDeltaTime * moveSpeed * moveDir_x * transform.right);
         Rotate();
     }
 
@@ -76,6 +82,7 @@ public class PlayerController : MonoBehaviour
     private void OnAttack(InputAction.CallbackContext obj)
     {
         animator.SetTrigger("Attack");
+        
     }
 
     private void OnRun(InputAction.CallbackContext context)
@@ -99,10 +106,18 @@ public class PlayerController : MonoBehaviour
 
     private void SetInput(Vector2 input , bool move)
     {
-        rotateDir = input.x;
-        moveDir = input.y;
+        moveDir_y = input.y;
+        moveDir_x = input.x;
         animator.SetBool("Move", move);
     }
+
+    private void OnMouseMove(InputAction.CallbackContext context)
+    {
+        Vector2 mousePos = context.ReadValue<Vector2>();
+        rotateDir = Mathf.Clamp(mousePos.x / Screen.width * 2f - 1f, -1f, 1f);
+        Debug.Log($"MousePos : {mousePos}");
+    }
+
     void Rotate()
     {
         Quaternion rotate = Quaternion.AngleAxis(Time.fixedDeltaTime * turnSpeed * rotateDir, transform.up);

@@ -53,6 +53,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftRight"",
+                    ""type"": ""Value"",
+                    ""id"": ""e40c4e5f-fc74-4949-9c13-47b06856bdd4"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -132,6 +141,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0d4e03f0-cdfa-4c2f-bc69-da5e9b65c060"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -160,6 +180,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
+        m_Player_LeftRight = m_Player.FindAction("LeftRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -222,6 +243,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Run;
+    private readonly InputAction m_Player_LeftRight;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -229,6 +251,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Run => m_Wrapper.m_Player_Run;
+        public InputAction @LeftRight => m_Wrapper.m_Player_LeftRight;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -247,6 +270,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                @LeftRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeftRight;
+                @LeftRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeftRight;
+                @LeftRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeftRight;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -260,6 +286,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
+                @LeftRight.started += instance.OnLeftRight;
+                @LeftRight.performed += instance.OnLeftRight;
+                @LeftRight.canceled += instance.OnLeftRight;
             }
         }
     }
@@ -278,5 +307,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnLeftRight(InputAction.CallbackContext context);
     }
 }
